@@ -1,9 +1,6 @@
-name: CD | Build-Test-Release
+name: CD | Build-Release
 
 on:
-  push:
-    branches:
-      - "main"
   release:
     types: [published]
   workflow_dispatch:
