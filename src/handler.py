@@ -4,6 +4,7 @@ import soundfile as sf
 import runpod
 import torch
 from transformers import VitsModel, AutoTokenizer
+from fastapi.responses import StreamingResponse
 
 
 HF_MODEL_DICT = {
@@ -52,13 +53,11 @@ def handler(event):
         outputs = model(**inputs)
     waveform = outputs.waveform[0].cpu().numpy()
 
-    # Return the audio as base64 encoded string
-    buffer = io.BytesIO()
-    sf.write(buffer, waveform, 16000, format="wav")
-    buffer.seek(0)
-    audio_bytes = buffer.getvalue()
-    audio_base64 = base64.b64encode(audio_bytes).decode("utf-8")
-    return {"audio": audio_base64}
+    # Return the audio as streaming response
+    audio_io = io.BytesIO()
+    sf.write(audio_io, waveform, 1600, format="wav")
+    audio_io.seek(0)
+    return StreamingResponse(audio_io, media_type="audio/wav")
 
 
 runpod.serverless.start({"handler": handler})

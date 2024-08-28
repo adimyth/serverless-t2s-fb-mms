@@ -9,3 +9,4 @@ runpod==1.6.2
 soundfile==0.12.1
 transformers
 torch
+fastapi
