@@ -12,10 +12,7 @@ on:
 
 jobs:
   docker-build:
-    runs-on: DO
-    # DO is a custom runner deployed on DigitalOcean, only available for workflows under the runpod-workers organization.
-    # If you would like to use this workflow, you can replace DO with ubuntu-latest or any other runner.
-
+    runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
