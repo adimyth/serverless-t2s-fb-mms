@@ -21,7 +21,12 @@ HF_MODEL_DICT = {
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Initialize S3 client
-s3 = boto3.client("s3")
+s3 = boto3.client(
+    "s3",
+    access_key_id=os.environ["RUNPOD_SECRET_AWS_ACCESS_KEY_ID"],
+    secret_access_key=os.environ["RUNPOD_SECRET_AWS_SECRET_ACCESS_KEY"],
+    region_name=os.environ["RUNPOD_SECRET_AWS_REGION"],
+)
 
 # Load model and tokenizer outside the handler
 LANG_MODELS = {}
@@ -62,13 +67,18 @@ def handler(event):
 
     # Save the waveform as a wav file
     output = io.BytesIO()
-    sf.write(output, waveform, 22050, format="wav")
+    sf.write(output, waveform, 16000, format="wav")
     output.seek(0)
 
     # Upload the file to S3
     key = f"{uuid.uuid4()}.wav"
-    s3.upload_fileobj(output, os.environ["S3_BUCKET_NAME"], key)
-    cdn_url = f"{os.environ['CDN_URL']}/{key}"
+    s3.upload_fileobj(
+        output,
+        os.environ["RUNPOD_SECRET_S3_BUCKET_NAME"],
+        key,
+        ExtraArgs={"ContentType": "audio/wav"},
+    )
+    cdn_url = f"{os.environ['RUNPOD_SECRET_CDN_URL']}/{key}"
 
     return {"url": cdn_url}
 

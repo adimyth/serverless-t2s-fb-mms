@@ -23,3 +23,6 @@ curl --location 'http://0.0.0.0:8000/runsync' \
 
 > [!IMPORTANT]
 > It seems as if the `runsync` endpoint only returns JSON Response, even though it uses FastAPI to serve the model as an API. Hence, in the handler I have added an additional step to store the file to S3 & return the CDN URL. This is a workaround to the issue.
+
+> [!NOTE]
+> I am passing the AWS Creds (refer `src/.env.example`) as secrets. Runpod requires secrets to be prefixed with `RUNPOD_SECRET_`. Refer the [docs](https://docs.runpod.io/pods/templates/secrets) for more information.
