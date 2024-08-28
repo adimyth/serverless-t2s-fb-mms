@@ -1,10 +1,14 @@
 import io
-import base64
+import os
+import uuid
 import soundfile as sf
 import runpod
 import torch
 from transformers import VitsModel, AutoTokenizer
-from fastapi.responses import StreamingResponse
+import boto3
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 HF_MODEL_DICT = {
@@ -15,6 +19,9 @@ HF_MODEL_DICT = {
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Initialize S3 client
+s3 = boto3.client("s3")
 
 # Load model and tokenizer outside the handler
 LANG_MODELS = {}
@@ -53,11 +60,17 @@ def handler(event):
         outputs = model(**inputs)
     waveform = outputs.waveform[0].cpu().numpy()
 
-    # Return the audio as streaming response
-    audio_io = io.BytesIO()
-    sf.write(audio_io, waveform, 1600, format="wav")
-    audio_io.seek(0)
-    return StreamingResponse(audio_io, media_type="audio/wav")
+    # Save the waveform as a wav file
+    output = io.BytesIO()
+    sf.write(output, waveform, 22050, format="wav")
+    output.seek(0)
+
+    # Upload the file to S3
+    key = f"{uuid.uuid4()}.wav"
+    s3.upload_fileobj(output, os.environ["S3_BUCKET_NAME"], key)
+    cdn_url = f"{os.environ['CDN_URL']}/{key}"
+
+    return {"url": cdn_url}
 
 
 runpod.serverless.start({"handler": handler})
