@@ -23,8 +23,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Initialize S3 client
 s3 = boto3.client(
     "s3",
-    access_key_id=os.environ["RUNPOD_SECRET_AWS_ACCESS_KEY_ID"],
-    secret_access_key=os.environ["RUNPOD_SECRET_AWS_SECRET_ACCESS_KEY"],
+    aws_access_key_id=os.environ["RUNPOD_SECRET_AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=os.environ["RUNPOD_SECRET_AWS_SECRET_ACCESS_KEY"],
     region_name=os.environ["RUNPOD_SECRET_AWS_REGION"],
 )
 
