@@ -16,6 +16,7 @@ HF_MODEL_DICT = {
     "ta": "facebook/mms-tts-tam",
     "te": "facebook/mms-tts-tel",
     "hi": "facebook/mms-tts-hin",
+    "en": "facebook/mms-tts-eng",
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
