@@ -28,4 +28,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: adimyth/serverless-tts-deployment:v1.1.0
+          tags: adimyth/serverless-s2t-indic-wav2vec:v1.0.0

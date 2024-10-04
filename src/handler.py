@@ -12,11 +12,15 @@ load_dotenv()
 
 
 HF_MODEL_DICT = {
+    "hi": "facebook/mms-tts-hin",
     "kn": "facebook/mms-tts-kan",
     "ta": "facebook/mms-tts-tam",
     "te": "facebook/mms-tts-tel",
-    "hi": "facebook/mms-tts-hin",
-    "en": "facebook/mms-tts-eng",
+    "mr": "facebook/mms-tts-mar",
+    "ml": "facebook/mms-tts-mal",
+    "gu": "facebook/mms-tts-guj",
+    "bn": "facebook/mms-tts-ben",
+    "pa": "facebook/mms-tts-pan",
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -52,7 +56,7 @@ def handler(event):
     if not language:
         return {"error": "language is required"}
     if language not in LANG_MODELS:
-        return {"error": "language not supported"}
+        return {"error": f"{language} not supported"}
 
     # Get model and tokenizer for the language
     model = LANG_MODELS[language]
