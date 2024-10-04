@@ -1,5 +1,16 @@
 ## Deploying Huggingface Models on RunPod
 
+### Languages Supported
+- Hindi
+- Kannada
+- Tamil
+- Telugu
+- Marathi
+- Malayalam
+- Bengali
+- Gujarati
+- Punjabi
+
 ### Running the project
 
 1. Clone the repository
